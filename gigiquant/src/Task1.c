@@ -49,7 +49,13 @@ void freeList(Nod *head)
     }
 }
 
-int main(int argc, char *argv[])
+double trunchiere(double x)
+{
+
+    return (long long)(x*1000)/1000.0;
+}
+
+int main(int argc, const char *argv[])
 {
     // Functia citeste valorile si numarul de observatii dintr-un fisier
     FILE *input = fopen(argv[1], "r");
@@ -83,28 +89,35 @@ t2=t2->next;
 
 // Inceput calcul Randament mediu
 double sumRnd=0;
-t1=head->next; // Resetare pointer parcurgere lista
+t1=head->next; // Resetare parcurgere lista
 while(t1!=NULL)
 {
     sumRnd=sumRnd+t1->randament;
     t1=t1->next;
 }
 
-double miu=sumRnd/N; // Calcul miu
+double miu=sumRnd/(N-1); // Calcul miu
 
 
 //Inceput calcul volatilitate (deviatie medie)
 double sumVol=0;
-t1=head->next;
+t1=head->next; // Resetare parcurgere lista
 while(t1!=NULL)
 {
     sumVol=sumVol+pow(t1->randament-miu, 2);
     t1=t1->next;
 }
-double wro=sqrt(sumVol/N);
+double wro=sqrt(sumVol/(N-1));
 
 int Rf=0;
 double sharpeRatio=(miu-Rf)/wro;
+
+//Inceput Trunchiere Date Output
+miu=trunchiere(miu);
+
+wro=trunchiere(wro);
+
+sharpeRatio=trunchiere(sharpeRatio);
 
 //Scriere SharpeRatio intr-un fisier output
 FILE *output = fopen(argv[2], "w");

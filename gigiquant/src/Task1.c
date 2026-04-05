@@ -76,7 +76,7 @@ Nod* t2=head->next; // Nodul pentru Pt (din formula)
 int i;
 for(i=1; i<N; i++)
 {
-t2->randament=(t1->valoare-t2->valoare)/t2->valoare; // Calcul randament
+t2->randament=log(t1->valoare-t2->valoare); // Calcul randament
 t1=t2;
 t2=t2->next;
 }

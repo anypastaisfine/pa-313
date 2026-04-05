@@ -80,9 +80,10 @@ t2->randament=(t2->valoare-t1->valoare)/t1->valoare; // Calcul randament
 t1=t2;
 t2=t2->next;
 }
+
 // Inceput calcul Randament mediu
 double sumRnd=0;
-t1=head->next;
+t1=head->next; // Resetare pointer parcurgere lista
 while(t1!=NULL)
 {
     sumRnd=sumRnd+t1->randament;
@@ -100,16 +101,12 @@ while(t1!=NULL)
     sumVol=sumVol+pow(t1->randament-miu, 2);
     t1=t1->next;
 }
-double root=sumVol/(N-1);
-double wro=sqrt(root);
+double wro=sqrt(sumVol/(N-1));
 
 
 int Rf=0;
 double sharpeRatio=(miu-Rf)/wro;
 
-sharpeRatio=sharpeRatio*1000;
-sharpeRatio=trunc(sharpeRatio);
-sharpeRatio=sharpeRatio/1000;
 //Scriere SharpeRatio intr-un fisier output
 FILE *output = fopen(argv[2], "w");
     if (output == NULL)
@@ -117,14 +114,6 @@ FILE *output = fopen(argv[2], "w");
         printf("Eroare creare fisier de output!\n");
         return 1;
     }
-wro=wro*1000;
-wro=trunc(wro);
-wro=wro/1000;
-
-miu=miu*1000;
-miu=trunc(miu);
-miu=miu/1000;
-
 fprintf(output, "%.3f\n", miu);
 fprintf(output, "%.3f\n", wro);
 fprintf(output, "%.3f\n", sharpeRatio);

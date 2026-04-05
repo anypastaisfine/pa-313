@@ -40,10 +40,9 @@ void createList(Nod **head, double val)
 // Functie eliberare lista din memorie
 void freeList(Nod *head)
 {
-    Nod *current;
     while (head != NULL)
     {
-        current = head;
+        Nod *current = head;
         head = head->next;
         free(current);
     }
@@ -75,6 +74,14 @@ int main(int argc, const char *argv[])
         createList(&head, val); // Popularea listei cu N valori dorite 
     }
     fclose(input);
+
+//Check Style Date Suficiente
+if (head==NULL || head->next == NULL)
+{
+    printf("Date insuficiente. Nu se poate calcula");
+    freeList(head);
+    return 1;
+}
 
 //Inceput calcul Randament la moment t()
 Nod* t1=head; // Nodul pentru Pt-1 (din formula)

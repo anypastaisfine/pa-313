@@ -12,8 +12,8 @@
   <line>Command: /home/a_radu/PA/gigiquant/src/Task1 /home/a_radu/PA/gigiquant/in/data1.in /home/a_radu/PA/gigiquant/out/data1.out</line>
 </preamble>
 
-<pid>4547</pid>
-<ppid>4532</ppid>
+<pid>4813</pid>
+<ppid>4775</ppid>
 <tool>memcheck</tool>
 
 <args>
@@ -32,13 +32,13 @@
 
 <status>
   <state>RUNNING</state>
-  <time>00:00:00:00.192 </time>
+  <time>00:00:00:00.107 </time>
 </status>
 
 
 <status>
   <state>FINISHED</state>
-  <time>00:00:00:02.648 </time>
+  <time>00:00:00:02.717 </time>
 </status>
 
 <errorcounts>

@@ -76,7 +76,7 @@ Nod* t2=head->next; // Nodul pentru Pt (din formula)
 int i;
 for(i=1; i<N; i++)
 {
-t2->randament=(t2->valoare-t1->valoare)/t1->valoare; // Calcul randament
+t2->randament=(t1->valoare-t2->valoare)/t2->valoare; // Calcul randament
 t1=t2;
 t2=t2->next;
 }
@@ -90,7 +90,7 @@ while(t1!=NULL)
     t1=t1->next;
 }
 
-double miu=sumRnd/(N-1); // Calcul miu
+double miu=sumRnd/N; // Calcul miu
 
 
 //Inceput calcul volatilitate (deviatie medie)
@@ -101,8 +101,7 @@ while(t1!=NULL)
     sumVol=sumVol+pow(t1->randament-miu, 2);
     t1=t1->next;
 }
-double wro=sqrt(sumVol/(N-1));
-
+double wro=sqrt(sumVol/N);
 
 int Rf=0;
 double sharpeRatio=(miu-Rf)/wro;

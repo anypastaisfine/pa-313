@@ -9,6 +9,65 @@ typedef struct Node
     double randament;
     struct Node *next;
 } Nod;
+void createList(Nod **head, double val);
+void freeList(Nod *head);
+void addRandament(Nod *head);
+double aflaMiu(Nod *head, int N);
+double aflaVolatilitate(Nod *head, double miu, int N);
+double aflaSharpe(double miu, double wro, double Rf);
+double trunchiere(double x);
+
+
+int main(int argc, char *argv[])
+{
+    // Functia citeste valorile si numarul de observatii dintr-un fisier
+    FILE *input = fopen(argv[1], "r");
+    if (input == NULL)
+    {
+        printf("Eroare citire fisier!\n");
+        return 1;
+    }
+    // Numarul de observatii date
+    int N;
+    fscanf(input, "%d", &N);
+    Nod *head = NULL;
+    for (int i = 0; i < N; i++)
+    {
+        double val;
+        fscanf(input, "%lf", &val);
+        createList(&head, val); // Popularea listei cu N valori dorite 
+    }
+    fclose(input);
+
+addRandament(head);
+
+double miu = aflaMiu(head, N);
+double wro = aflaVolatilitate(head, miu, N);
+
+int Rf = 0;
+double sharpeRatio = aflaSharpe(miu, wro, Rf);
+
+//Inceput Trunchiere Date Output
+miu=trunchiere(miu);
+
+wro=trunchiere(wro);
+
+sharpeRatio=trunchiere(sharpeRatio);
+
+//Scriere SharpeRatio intr-un fisier output
+FILE *output = fopen(argv[2], "w");
+    if (output == NULL)
+    {
+        printf("Eroare creare fisier de output!\n");
+        return 1;
+    }
+fprintf(output, "%.3f\n", miu);
+fprintf(output, "%.3f\n", wro);
+fprintf(output, "%.3f\n", sharpeRatio);
+fclose(output);
+freeList(head); // Memory leak CHECKED.
+return 0;
+}
 
 // Functirea creare lista
 void createList(Nod **head, double val)
@@ -40,103 +99,62 @@ void createList(Nod **head, double val)
 // Functie eliberare lista din memorie
 void freeList(Nod *head)
 {
+    Nod *current;
     while (head != NULL)
     {
-        Nod *current = head;
+        current = head;
         head = head->next;
         free(current);
     }
+}
+// Functie Calcul Randamente (Task1)
+void addRandament(Nod *head)
+{
+    Nod *t1 = head;
+    Nod *t2 = head->next;
+
+    while (t2 != NULL)
+    {
+        t2->randament = (t2->valoare - t1->valoare) / t1->valoare;
+        t1 = t2;
+        t2 = t2->next;
+    }
+}
+double aflaMiu(Nod *head, int N)
+{
+    double sumRnd = 0;
+    Nod *current = head->next;
+
+    while (current != NULL)
+    {
+        sumRnd += current->randament;
+        current = current->next;
+    }
+
+    return (sumRnd / (N - 1));
+}
+
+double aflaVolatilitate(Nod *head, double miu, int N)
+{
+    double sumVol = 0;
+    Nod *current = head->next;
+
+    while (current != NULL)
+    {
+        sumVol += pow(current->randament - miu, 2);
+        current = current->next;
+    }
+
+    return sqrt(sumVol / (N - 1));
+}
+
+double aflaSharpe(double miu, double wro, double Rf)
+{
+    return (miu - Rf) / wro;
 }
 
 double trunchiere(double x)
 {
 
     return (long long)(x*1000)/1000.0;
-}
-
-int main(int argc, const char *argv[])
-{
-    // Functia citeste valorile si numarul de observatii dintr-un fisier
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL)
-    {
-        printf("Eroare citire fisier!\n");
-        return 1;
-    }
-    // Numarul de observatii date
-    int N;
-    fscanf(input, "%d", &N);
-    Nod *head = NULL;
-    for (int i = 0; i < N; i++)
-    {
-        double val;
-        fscanf(input, "%lf", &val);
-        createList(&head, val); // Popularea listei cu N valori dorite 
-    }
-    fclose(input);
-
-//Check Style Date Suficiente
-if (head==NULL || head->next == NULL)
-{
-    printf("Date insuficiente. Nu se poate calcula");
-    freeList(head);
-    return 1;
-}
-
-//Inceput calcul Randament la moment t()
-Nod* t1=head; // Nodul pentru Pt-1 (din formula)
-Nod* t2=head->next; // Nodul pentru Pt (din formula)
-int i;
-for(i=1; i<N; i++)
-{
-t2->randament=(t2->valoare-t1->valoare)/t1->valoare; // Calcul randament
-t1=t2;
-t2=t2->next;
-}
-
-// Inceput calcul Randament mediu
-double sumRnd=0;
-t1=head->next; // Resetare parcurgere lista
-while(t1!=NULL)
-{
-    sumRnd=sumRnd+t1->randament;
-    t1=t1->next;
-}
-
-double miu=sumRnd/(N-1); // Calcul miu
-
-
-//Inceput calcul volatilitate (deviatie medie)
-double sumVol=0;
-t1=head->next; // Resetare parcurgere lista
-while(t1!=NULL)
-{
-    sumVol=sumVol+pow(t1->randament-miu, 2);
-    t1=t1->next;
-}
-double wro=sqrt(sumVol/(N-1));
-
-int Rf=0;
-double sharpeRatio=(miu-Rf)/wro;
-
-//Inceput Trunchiere Date Output
-miu=trunchiere(miu);
-
-wro=trunchiere(wro);
-
-sharpeRatio=trunchiere(sharpeRatio);
-
-//Scriere SharpeRatio intr-un fisier output
-FILE *output = fopen(argv[2], "w");
-    if (output == NULL)
-    {
-        printf("Eroare creare fisier de output!\n");
-        return 1;
-    }
-fprintf(output, "%.3f\n", miu);
-fprintf(output, "%.3f\n", wro);
-fprintf(output, "%.3f\n", sharpeRatio);
-fclose(output);
-freeList(head); // Memory leak CHECKED.
-return 0;
 }

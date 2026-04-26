@@ -34,15 +34,10 @@ void enqueue(Queue *q, int zi, double diff, const char *piata)
 void printQueue(Queue *q, FILE *output)
 {
     QNod *curr = q->front;
-    if(q->front == NULL)
-    {
-        printf("Coada este goala\n");
-        return;
-    }
 
-    while (curr)
+    while (curr!=NULL)
     {
-        printf("ziua %d - %f - %s\n", curr->zi, curr->diff, curr->piata);
+        fprintf(output, "ziua %d - %f - %s\n", curr->zi, curr->diff, curr->piata);
         curr = curr->next;
     }
 }

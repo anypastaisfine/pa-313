@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "lista.h"
 #include "task1math.h"
@@ -10,32 +11,68 @@
 #include "coada.h"
 #include "stiva.h" 
 
+//Functie selectie data input
+int getDataFile(const char *path)
+{
+    const char *l=strstr(path, "data");
+    if (l==NULL)
+    {
+        return -1;
+    }
+
+    l+=4;
+
+    int nr=0;
+    while(*l>='0' && *l<='9')
+    {
+        nr=nr*10+(*l-'0');
+        l++;
+    }
+    return nr;
+}
+
+
+
 int main(int argc, char *argv[])
 {
-    // Functia citeste valorile si numarul de observatii dintr-un fisier
+    if(argc<3) // Checker input error if triggered
+    {
+        printf("Folosesc: %s input output\n", argv[0]);
+        return 1;
+    }
+    
+
+    // Input & Ouput generalizat
     FILE *input = fopen(argv[1], "r");
     if (input == NULL)
     {
-        printf("Eroare citire fisier!\n");
+        printf("Eroare citire fisier input!\n");
         return 1;
     }
 
-    //Cod Branching Task1 || Task2
-    char check[50];
-    fscanf(input,"%s",check);
-    rewind(input);
+    FILE *output=fopen(argv[2], "w");
+    if(output==NULL)
+    {
+        printf("Eroare citire fisiere output!\n");
+        fclose(input);
+        return 1;
+    }
 
-    //Ramura Sharpe Ratio
-    if(isdigit(check[0]))
+    //Branching pe Task
+    int dataFileNr=getDataFile(argv[1]);
+
+    //Branch Sharpe Ration
+    if(dataFileNr>=1 && dataFileNr<=5)
     {
         int N;
         fscanf(input, "%d", &N);
         Nod *head = NULL;
+        Nod *tail= NULL;
         for (int i = 0; i < N; i++)
         {
             double val;
             fscanf(input, "%lf", &val);
-            createList(&head, val); // Popularea listei cu N valori dorite 
+            createList(&head, &tail, val); // Popularea listei cu N valori dorite 
         }
 
         addRandament(head);
@@ -53,80 +90,60 @@ int main(int argc, char *argv[])
 
         sharpeRatio=trunchiere(sharpeRatio);
 
-        //Scriere SharpeRatio intr-un fisier output
-        FILE *output = fopen(argv[2], "w");
-        if (output == NULL)
-            {
-                printf("Eroare creare fisier de output!\n");
-                return 1;
-            }
+
         fprintf(output, "%.3f\n", miu);
         fprintf(output, "%.3f\n", wro);
         fprintf(output, "%.3f\n", sharpeRatio);
         freeList(head); // Memory leak CHECKED.
-        fclose(output);
     }   
-    //Ramura Arbitraj
-    else
+    //Branch Arbitraj
+    else if(dataFileNr>=6 && dataFileNr<=10)
     {
+        char line[100];
         char name_p1[50], name_p2[50], name_p3[50];
-        double tmp;
-        double b_val1[1000], b_val2[1000], b_val3[1000];
+        double *b_val1=NULL; 
+        double *b_val2=NULL;
+        double *b_val3=NULL;
         int n1=0, n2=0, n3=0;
 
-        //P1
-        fscanf(input, "%s",name_p1);
-        while(fscanf(input, "%lf", &tmp)==1)
-        {
-            b_val1[n1++]=tmp;
-            char k=fgetc(input);
-            if(k==EOF)
-            {
-                break;
-            }
-            if(k<'0' || k>'9')
-            {
-                ungetc(k, input);
-                break;
-            }
-            ungetc(k, input);
-        }
-        // P2
-        fscanf(input, "%s",name_p2);
-        while(fscanf(input, "%lf", &tmp)==1)
-        {
-            b_val2[n2++]=tmp;
-            char k=fgetc(input);
-            if(k==EOF)
-            {
-                break;
-            }
-            if(k<'0' || k>'9')
-            {
-                ungetc(k, input);
-                break;
-            }
-            ungetc(k, input);
-        }
+       int market = 0;
 
-        // P3
-        fscanf(input, "%s",name_p3);
-        while(fscanf(input, "%lf", &tmp)==1)
+    while (fgets(line, sizeof(line), input))
         {
-            b_val3[n3++]=tmp;
-            char k=fgetc(input);
-            if(k==EOF)
-            {
-                break;
-            }
-            if(k<'0' || k>'9')
-            {
-                ungetc(k, input);
-                break;
-            }
-            ungetc(k, input);
-        }
+            double val;
 
+            if (sscanf(line, "%lf", &val) == 1)
+                {
+                    if (market == 1)
+                    {
+                        b_val1 = realloc(b_val1, (n1 + 1) * sizeof(double));
+                        b_val1[n1++] = val;
+                    }
+                    else if (market == 2)
+                    {
+                        b_val2 = realloc(b_val2, (n2 + 1) * sizeof(double));
+                        b_val2[n2++] = val;
+                    }
+                    else if (market == 3)
+                    {
+                        b_val3 = realloc(b_val3, (n3 + 1) * sizeof(double));
+                        b_val3[n3++] = val;
+                    }
+                }
+            else
+                {
+                    line[strcspn(line, "\n")] = '\0';
+
+                    market++;
+
+                    if (market == 1)
+                        strcpy(name_p1, line);
+                    else if (market == 2)
+                        strcpy(name_p2, line);
+                    else if (market == 3)
+                        strcpy(name_p3, line);
+                }
+        }
         // Populare stive
         StNod *P1= NULL;
         StNod *P2= NULL;
@@ -146,23 +163,18 @@ int main(int argc, char *argv[])
         {
             push(&P3, b_val3[i]);
         }
-
+        //Eliberare memorie CHECKED
+        free(b_val1);
+        free(b_val2);
+        free(b_val3);   
         //Determinare Arbitraj
         Queue q;
         initQueue(&q);
         
-        detArbitrage(P1, P2, P3, &q);
+        detArbitrage(&P1, &P2, &P3, &q, name_p1, name_p2, name_p3);
 
         // Output
-        FILE *output = fopen(argv[2], "w");
-        if (output == NULL)
-            {
-                printf("Eroare creare fisier de output!\n");
-                return 1;
-            }
         printQueue(&q, output);
-        
-        fclose(output);
         
         // Clean-up memorie
         deleteQueue(&q);
@@ -175,5 +187,6 @@ int main(int argc, char *argv[])
             pop(&P3);
     }
     fclose(input);
+    fclose(output);
     return 0;
 }

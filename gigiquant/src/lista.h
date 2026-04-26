@@ -6,5 +6,5 @@ typedef struct Node
     struct Node *next;
 } Nod;
 
-void createList(Nod **head, double val);
+void createList(Nod **head, Nod **tail, double val);
 void freeList(Nod *head);

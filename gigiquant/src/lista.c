@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "lista.h"
 
-void createList(Nod **head, double val)
+void createList(Nod **head, Nod **tail, double val)
 {
     Nod *newNode = (Nod *)malloc(sizeof(Nod));
     if (!newNode)
@@ -18,14 +18,12 @@ void createList(Nod **head, double val)
     if (*head == NULL)
     {
         *head = newNode;
+        *tail = newNode;
     }
     else
     {
-        Nod *current = *head;
-        while (current->next != NULL)
-            current = current->next;
-
-        current->next = newNode;
+        (*tail)->next = newNode;
+        *tail = newNode;
     }
 }
 

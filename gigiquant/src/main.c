@@ -87,7 +87,10 @@ int main(int argc, char *argv[])
     {
         detDiversificare(input, output);
     }
-    // Spatiu TASK 4
+
+        // Spatiu TASK 4
+
+
     fclose(input);
     fclose(output);
 

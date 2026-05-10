@@ -1,5 +1,5 @@
 {
-	"source_path": "./src/Task1",
+	"source_path": "./src/gigiquant.c",
 	"executable_path": "./src/gigiquant.c",
 	"input_path": "./in",
 	"output_path": "./out",

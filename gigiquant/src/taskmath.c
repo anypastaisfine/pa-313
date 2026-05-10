@@ -170,7 +170,7 @@ void detDiversificare(FILE *input, FILE *output)
         zi++;
     }
 
-    TreeNode *root = creareRadacina();
+    TreeNode *root = creareRadacina(); // REDENUMESTE-MA
 
     for (int i = 0; i < stockCount; i++)
     {

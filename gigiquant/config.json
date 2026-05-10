@@ -1,6 +1,6 @@
 {
-	"source_path": "./src/gigiquant.c",
-	"executable_path": "./src/gigiquant.c",
+	"source_path": "./src/main.c",
+	"executable_path": "./src/gigiquant",
 	"input_path": "./in",
 	"output_path": "./out",
 	"ref_path": "./ref",

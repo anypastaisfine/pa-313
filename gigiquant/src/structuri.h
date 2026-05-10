@@ -63,7 +63,7 @@ typedef struct TreeNode {
 TreeNode *creareRadacina(); //!!NUME VECHI - TREBUIE SCHIMBAT IN CEVA PENTRU CONSTRUITE ARBORE
 void addStock(TreeNode *node, const char *acronim, int index);
 void inserareInTree(TreeNode *root, const char *acronim, int index,
-                        double prices[MAX_ZILE], int zi);
+                        double prices[MAX_ZILE], int z);
 void getPath(double prices[MAX_ZILE], int zi, char path[MAX_ZILE]);
 void getOglindit(char path[MAX_ZILE], char mirror[MAX_ZILE]);
 void freeMemoryStock(StockLS *list);

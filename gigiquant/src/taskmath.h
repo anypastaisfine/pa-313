@@ -13,5 +13,5 @@ double trunchiere(double x);
 
 //Task 2
 void detArbitrage(FILE *input, FILE *output);
-//Task 3
+//Prototip Task 3
 void detDiversificare(FILE *input, FILE *output);

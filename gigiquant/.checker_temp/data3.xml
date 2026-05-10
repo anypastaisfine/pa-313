@@ -12,8 +12,8 @@
   <line>Command: /home/a_radu/PA/gigiquant/src/gigiquant /home/a_radu/PA/gigiquant/in/data3.in /home/a_radu/PA/gigiquant/out/data3.out</line>
 </preamble>
 
-<pid>8380</pid>
-<ppid>8354</ppid>
+<pid>8520</pid>
+<ppid>8494</ppid>
 <tool>memcheck</tool>
 
 <args>
@@ -32,13 +32,13 @@
 
 <status>
   <state>RUNNING</state>
-  <time>00:00:00:00.142 </time>
+  <time>00:00:00:00.078 </time>
 </status>
 
 
 <status>
   <state>FINISHED</state>
-  <time>00:00:00:02.253 </time>
+  <time>00:00:00:02.713 </time>
 </status>
 
 <errorcounts>
